@@ -2,6 +2,7 @@ import json
 from typing import Dict
 from kafka import KafkaProducer, KafkaAdminClient
 from kafka.admin import NewTopic
+from kafka.errors import TopicAlreadyExistsError
 
 
 class KafkaProdutorClima:
@@ -16,9 +17,15 @@ class KafkaProdutorClima:
         print(self.__admin_cliente)
 
     def criar_topico(self, topico: str, numero_particoes: int) -> None:
-        novo_topico = NewTopic(
-            name=topico, num_partitions=numero_particoes, replication_factor=1)
-        self.__admin_cliente.create_topics([novo_topico])
+        try:
+            novo_topico = NewTopic(
+                name=topico,
+                num_partitions=numero_particoes,
+                replication_factor=1
+            )
+            self.__admin_cliente.create_topics([novo_topico])
+        except TopicAlreadyExistsError:
+            return
 
     def verificar_particoes(self, topico: str) -> int:
         particoes = self.__admin_cliente.describe_topics([topico])
