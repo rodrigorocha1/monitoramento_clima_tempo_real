@@ -3,7 +3,7 @@ import datetime
 from kafka import KafkaConsumer
 
 
-class KafkaConsumidorCliente:
+class KafkaConsumidorClima:
     def __init__(self, bootstrap_servers: str, group_id: str, topico: str) -> None:
         self.__consumer = KafkaConsumer(
             topico,
