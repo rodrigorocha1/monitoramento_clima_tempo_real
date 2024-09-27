@@ -1,0 +1,71 @@
+@startuml
+
+package "database" {
+    interface IDatabaseConnection {
+        +connect() : void
+        +disconnect() : void
+    }
+    
+    class PostgreSQLConnection {
+        +connect() : void
+        +disconnect() : void
+    }
+}
+
+package "repository" {
+    interface IRepository<T> {
+        +getAll() : List<T>
+        +getById(id: int) : T
+        +add(entity: T) : void
+        +update(entity: T) : void
+        +delete(id: int) : void
+    }
+    
+    class WeatherRepository {
+        -connection : IDatabaseConnection
+        +getAll() : List<WeatherData>
+        +getById(id: int) : WeatherData
+        +add(weatherData: WeatherData) : void
+        +update(weatherData: WeatherData) : void
+        +delete(id: int) : void
+    }
+}
+
+package "model" {
+    class WeatherData {
+        +city : String
+        +temperature : float
+        +humidity : float
+        +wind_speed : float
+        +timestamp : datetime
+    }
+}
+
+package "service" {
+    class WeatherService {
+        +fetchWeatherData(city: String) : WeatherData
+    }
+    
+    class KafkaProducerService {
+        +sendWeatherData(weatherData: WeatherData) : void
+    }
+}
+
+package "kafka" {
+    class KafkaProducer {
+        +send(topic: String, message: String) : void
+    }
+    
+    class KafkaConsumer {
+        +consume(topic: String) : void
+    }
+}
+
+repository::WeatherRepository o-- "1" database::IDatabaseConnection
+repository::WeatherRepository --> "0..*" model::WeatherData
+service::WeatherService --> "0..*" model::WeatherData
+service::KafkaProducerService --> kafka::KafkaProducer
+service::KafkaProducerService --> model::WeatherData
+kafka::KafkaConsumer --> model::WeatherData
+
+@enduml
