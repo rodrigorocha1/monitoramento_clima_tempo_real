@@ -29,8 +29,6 @@ class KafkaProdutorClima:
 
     def verificar_particoes(self, topico: str) -> int:
         particoes = self.__admin_cliente.describe_topics([topico])
-        print(particoes[0])
-        print(particoes[0]['partitions'])
         return len(particoes[0]['partitions'])
 
     def enviar_dados_clima(self, topico: str, municipio: str, dados_climaticos: Dict, particao: int):

@@ -13,7 +13,8 @@ def principal():
     )
     topico = 'topico_app_tempo_real'
     servico_tempo = ServicoTempo()
-    cidades = ['Ribeirão Preto', 'Sertãozinho']
+    cidades = ['Ribeirão Preto', 'Sertãozinho',
+               'Serrana', 'Cravinhos', 'Barrinha']
 
     kafka_produtor.criar_topico(topico=topico, numero_particoes=len(cidades))
     numero_particoes = kafka_produtor.verificar_particoes(topico=topico)
@@ -30,7 +31,7 @@ def principal():
                 dados_climaticos=dados_tempo,
                 municipio=cidade,
                 particao=particao)
-            time.sleep(2)
+        time.sleep(5)
 
 
 if __name__ == '__main__':
