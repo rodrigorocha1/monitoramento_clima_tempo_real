@@ -11,10 +11,24 @@ def principal():
         bootstrap_servers=os.environ['URL_KAFKA']
 
     )
-    topico = 'topico_app_tempo_real'
+    topico = 'topico_teste'
     servico_tempo = ServicoTempo()
-    cidades = ['Ribeirão Preto', 'Sertãozinho',
-               'Serrana', 'Cravinhos', 'Barrinha']
+    cidades = [
+        "Barrinha",
+        "Brodowski",
+        "Cravinhos",
+        "Dumont",
+        "Guatapará",
+        "Jardinópolis",
+        "Pontal",
+        "Pradópolis",
+        "Ribeirão Preto",
+        "Santa Rita do Passa Quatro",
+        "São Simão",
+        "Serrana",
+        "Serra Azul",
+        "Sertãozinho"
+    ]
 
     kafka_produtor.criar_topico(topico=topico, numero_particoes=len(cidades))
     numero_particoes = kafka_produtor.verificar_particoes(topico=topico)

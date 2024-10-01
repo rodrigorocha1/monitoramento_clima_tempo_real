@@ -15,32 +15,36 @@ class KafkaConsumidorClima:
         )
 
     def consumidor_mensagens(self):
-        for mensagem in self.__consumer:
-            cidade = mensagem.value["name"]
-            data_hora = datetime.datetime.fromtimestamp(
-                mensagem.value["dt"]).strftime('%Y-%m-%d %H:%M:%S')
-            temperatura = mensagem.value["main"]["temp"]
-            velocidade_vento = mensagem.value["wind"]["speed"]
-            umidade = mensagem.value["main"]["humidity"]
-            angulo_vento = mensagem.value["wind"]["deg"]
-            probabilidade_chuva = mensagem.value["clouds"]["all"]
-            data_hora_atual = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            chave = mensagem.key
-            clima = mensagem.value["weather"][0]["description"]
-            particao = mensagem.partition
-            offset = mensagem.offset
-            icone = mensagem.value["weather"][0]["icon"]
-            yield {
-                'particao': particao,
-                'cidade': cidade,
-                'data_hora_api': data_hora,
-                'temperatura': temperatura,
-                'data_hora_atual': data_hora_atual,
-                'clima': clima,
-                'icone': icone,
-                'umidade': umidade,
-                'velocidade_vento': velocidade_vento,
-                'angulo_vento': angulo_vento,
-                'probabilidade_chuva': probabilidade_chuva
+        try:
+            for mensagem in self.__consumer:
+                cidade = mensagem.value["name"]
+                data_hora = datetime.datetime.fromtimestamp(
+                    mensagem.value["dt"]).strftime('%Y-%m-%d %H:%M:%S')
+                temperatura = mensagem.value["main"]["temp"]
+                velocidade_vento = mensagem.value["wind"]["speed"]
+                umidade = mensagem.value["main"]["humidity"]
+                angulo_vento = mensagem.value["wind"]["deg"]
+                probabilidade_chuva = mensagem.value["clouds"]["all"]
+                data_hora_atual = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                chave = mensagem.key
+                clima = mensagem.value["weather"][0]["description"]
+                particao = mensagem.partition
+                offset = mensagem.offset
+                icone = mensagem.value["weather"][0]["icon"]
+                yield {
+                    'particao': particao,
+                    'cidade': cidade,
+                    'data_hora_api': data_hora,
+                    'temperatura': temperatura,
+                    'data_hora_atual': data_hora_atual,
+                    'clima': clima,
+                    'icone': icone,
+                    'umidade': umidade,
+                    'velocidade_vento': velocidade_vento,
+                    'angulo_vento': angulo_vento,
+                    'probabilidade_chuva': probabilidade_chuva
 
-            }
+                }
+
+        except:
+            print(f'Erro No municipio {mensagem.value}')

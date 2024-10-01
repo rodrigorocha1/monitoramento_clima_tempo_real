@@ -11,7 +11,7 @@ st.title('Dashboard Tempo Real para Monitoramento das Condições Climáticas pa
 kafka_consumer = KafkaConsumidorClima(
     bootstrap_servers='localhost:9092',
     group_id='weather_grupo',
-    topico='topico_app_tempo_real'
+    topico='topico_app_tempo_completo'
 )
 
 
