@@ -58,6 +58,7 @@ class Dashboard:
                 container_tela[particao].empty()
             for dados in self.__kafka_consumer.consumidor_mensagens():
                 particao = dados['particao']
+                print(dados)
                 if particao in container_tela:
                     with container_tela[particao].container():
                         self.__gerar_layout(dados=dados)

@@ -40,14 +40,14 @@ class ProdutorMain():
             for particao, cidade in enumerate(self.__cidades):
                 dados_tempo = self.__servico_tempo.obter_tempo_atual(
                     cidade=cidade)
-                self.enviar_dados_clima(
+                self.__kafka_produtor.enviar_dados_clima(
                     topico=self.__topico,
                     dados_climaticos=dados_tempo,
                     municipio=cidade,
                     particao=particao)
-                time.sleep(5)
+            time.sleep(5)
 
 
 if __name__ == '__main__':
-    pm = ProdutorMain
+    pm = ProdutorMain()
     pm.rodar_produtor()

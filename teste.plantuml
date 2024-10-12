@@ -1,5 +1,25 @@
-@startuml teste
+@startuml 'TESTE'
 
+skinparam dpi 500
+skinparam orientation portrait
+
+
+package produtor_main {
+    class ProdutorMain {
+        - List cidades
+        - String topico
+    }
+}
+
+package layout {
+        class Dahboard {
+            - gerar_configuracoes()
+            - gerar_layout()
+            + rodar_dashboard()
+
+        }
+}
+    
 package src {
     package consumidor {
         package kafka_consumidor_clima {
@@ -31,16 +51,6 @@ package src {
         }
     }
 
-    package produtor_main {
-        class ProdutorMain {
-        - List cidades
-        - String topico
-        }
-    }
-
-    
-
-
     package src.utils.faixas_climaticas{
         class EscalaVento {
             + obter_escala_vento(velocidade: float): str
@@ -53,21 +63,10 @@ package src {
         end note
 
     }
-
-    package layout {
-        class Dahboard {
-            - gerar_configuracoes()
-            - gerar_layout()
-            + rodar_dashboard()
-
-        }
-    }
-
-    ProdutorMain "1" o-- KafkaProdutorClima: Usa
-    ProdutorMain "1" o-- ServicoTempo: Usa
-    Dahboard "1" o-- KafkaConsumidorClima: Usa
-
-
 }
+
+ProdutorMain "1" o-- KafkaProdutorClima: Usa
+ProdutorMain "1" o-- ServicoTempo: Usa
+Dahboard "1" o-- KafkaConsumidorClima: Usa
 
 @enduml
