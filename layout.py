@@ -1,5 +1,5 @@
 import streamlit as st
-from src.utils.faixas_climaticas import obter_escala_vento
+from src.utils.faixas_climaticas import EstatisticaClimatica
 from datetime import datetime
 from src.consumidor.kafka_consumidor_clima import KafkaConsumidorClima
 from typing import Dict
@@ -38,7 +38,7 @@ class Dashboard:
             st.write(f'Umidade: {dados["umidade"]}%')
         with col3:
             st.write(
-                f"Velocidade do Vento: {dados['velocidade_vento']} m/s - Condição vento: {obter_escala_vento(dados['velocidade_vento'])}"
+                f"Velocidade do Vento: {dados['velocidade_vento']} m/s - Condição vento: {EstatisticaClimatica.obter_escala_vento(dados['velocidade_vento'])}"
             )
             st.write(f"Ângulo do Vento: {dados['angulo_vento']}°")
             st.write(
