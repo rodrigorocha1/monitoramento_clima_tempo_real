@@ -5,23 +5,22 @@ from src.consumidor.kafka_consumidor_clima import KafkaConsumidorClima
 from typing import Dict
 
 
-# Configuração da página
-st.set_page_config(
-    layout='wide',
-    page_title='Dashboard Tempo Real'
-)
+def gerar_layout():
+    st.set_page_config(
+        layout='wide',
+        page_title='Dashboard Tempo Real'
+    )
+    st.title('Dashboard Tempo Real para Monitoramento das Condições Climáticas para a Região de Ribeirão Preto')
 
-# Título da página
-st.title('Dashboard Tempo Real para Monitoramento das Condições Climáticas para a Região de Ribeirão Preto')
 
-# Instância do consumidor Kafka
-kafka_consumer = KafkaConsumidorClima(
-    bootstrap_servers='localhost:9092',
-    group_id='weather_grupo',
-    topico='topico_tempo_dashboard'
-)
+def configuracoes_kafka() -> KafkaConsumidorClima:
 
-# Função para gerar layout
+    kafka_consumer = KafkaConsumidorClima(
+        bootstrap_servers='localhost:9092',
+        group_id='weather_grupo',
+        topico='topico_tempo_dashboard'
+    )
+    return kafka_consumer
 
 
 def gerar_layout(dados: Dict):
@@ -47,19 +46,22 @@ def gerar_layout(dados: Dict):
     st.write('-' * 20)
 
 
-numero_particoes = 14
+def dashboard():
+    gerar_layout()
+    kafka_consumer = configuracoes_kafka()
+    numero_particoes = 14
+    container_tela = {
+        particao: st.empty() for particao in range(numero_particoes)
+    }
+    while True:
+        for particao in range(numero_particoes):
+            print('Primeiro loop', particao)
+            container_tela[particao].empty()
+        for dados in kafka_consumer.consumidor_mensagens():
+            particao = dados['particao']
+            if particao in container_tela:
+                with container_tela[particao].container():
+                    gerar_layout(dados=dados)
 
 
-container_tela = {
-    particao: st.empty() for particao in range(numero_particoes)
-}
-
-while True:
-    for particao in range(numero_particoes):
-        print('Primeiro loop', particao)
-        container_tela[particao].empty()
-    for dados in kafka_consumer.consumidor_mensagens():
-        particao = dados['particao']
-        if particao in container_tela:
-            with container_tela[particao].container():
-                gerar_layout(dados=dados)
+dashboard()
