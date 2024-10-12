@@ -1,0 +1,46 @@
+@startuml teste
+
+package src {
+    package consumidor {
+        package kafka_consumidor_clima {
+            class KafkaConsumidorClima {
+                + __init__(String bootstrap_servers, String group_id, String topico)
+                - KafkaConsumer consumer
+                + consumidor_mensagens() : Iterator[Dict]
+            }
+        }
+    }
+
+    package produtor {
+        package kafka_produtor_clima {
+            class KafkaProdutorClima {
+                + __init__(String bootstrap_servers)
+                - KafkaAdminClient admin_cliente
+                + criar_topico(String topico, Integer numero_particoes)
+                + verificar_particoes(String topico): Integer
+                + enviar_dados_clima(String topico, String municipio, Dict dados_climaticos,  Integer particao)
+            }
+        }
+    }
+
+    package servico.servico_tempo {
+        class ServicoTempo {
+            - String url 
+            - String chave
+            + obter_tempo_atual(Cidade: String) : json
+        }
+    }
+
+    class ProdutorMain {
+
+        - List cidades
+        - String topico
+ 
+
+    
+    }
+    ProdutorMain "1" o-- KafkaProdutorClima: Usa
+    ProdutorMain "1" o-- ServicoTempo: Usa
+}
+
+@enduml
