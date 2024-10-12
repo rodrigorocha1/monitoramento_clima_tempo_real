@@ -6,47 +6,48 @@ from src.servico.servico_tempo import ServicoTempo
 load_dotenv()
 
 
-def principal():
-    kafka_produtor = KafkaProdutorClima(
-        bootstrap_servers=os.environ['URL_KAFKA']
+class ProdutorMain():
+    def __init__(self):
+        self.__kafka_produtor = KafkaProdutorClima(
+            bootstrap_servers=os.environ['URL_KAFKA'])
+        self.__cidades = [
+            "Barrinha",
+            "Brodowski",
+            "Cravinhos",
+            "Dumont",
+            "Guatapará",
+            "Jardinópolis",
+            "Pontal",
+            "Pradópolis",
+            "Ribeirão Preto",
+            "Santa Rita do Passa Quatro",
+            "São Simão",
+            "Serrana",
+            "Serra Azul",
+            "Sertãozinho"
+        ]
+        self.__topico = 'topico_tempo_dashboard'
+        self.__servico_tempo = ServicoTempo()
 
-    )
-    topico = 'topico_tempo_dashboard'
-    servico_tempo = ServicoTempo()
-    cidades = [
-        "Barrinha",
-        "Brodowski",
-        "Cravinhos",
-        "Dumont",
-        "Guatapará",
-        "Jardinópolis",
-        "Pontal",
-        "Pradópolis",
-        "Ribeirão Preto",
-        "Santa Rita do Passa Quatro",
-        "São Simão",
-        "Serrana",
-        "Serra Azul",
-        "Sertãozinho"
-    ]
+    def rodar_produtor(self):
 
-    kafka_produtor.criar_topico(topico=topico, numero_particoes=len(cidades))
-    numero_particoes = kafka_produtor.verificar_particoes(topico=topico)
-    print(
-        f'Número de partições para o tópico {topico}: {numero_particoes}'
-    )
+        self.__kafka_produtor.criar_topico(
+            topico=self.__topico, numero_particoes=len(self.__cidades))
+        numero_particoes = self.__kafka_produtor.verificar_particoes(
+            topico=self.__topico)
 
-    while True:
-        for particao, cidade in enumerate(cidades):
-
-            dados_tempo = servico_tempo.obter_tempo_atual(cidade=cidade)
-            kafka_produtor.enviar_dados_clima(
-                topico=topico,
-                dados_climaticos=dados_tempo,
-                municipio=cidade,
-                particao=particao)
-        time.sleep(5)
+        while True:
+            for particao, cidade in enumerate(self.__cidades):
+                dados_tempo = self.__servico_tempo.obter_tempo_atual(
+                    cidade=cidade)
+                self.enviar_dados_clima(
+                    topico=self.__topico,
+                    dados_climaticos=dados_tempo,
+                    municipio=cidade,
+                    particao=particao)
+                time.sleep(5)
 
 
 if __name__ == '__main__':
-    principal()
+    pm = ProdutorMain
+    pm.rodar_produtor()
