@@ -11,7 +11,7 @@ def principal():
         bootstrap_servers=os.environ['URL_KAFKA']
 
     )
-    topico = 'topico_teste'
+    topico = 'topico_tempo_dashboard'
     servico_tempo = ServicoTempo()
     cidades = [
         "Barrinha",

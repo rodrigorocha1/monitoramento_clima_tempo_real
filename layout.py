@@ -1,44 +1,65 @@
 import streamlit as st
-import time
+from src.utils.faixas_climaticas import obter_escala_vento
 from datetime import datetime
 from src.consumidor.kafka_consumidor_clima import KafkaConsumidorClima
+from typing import Dict
+
+
+# Configuração da página
 st.set_page_config(
     layout='wide',
     page_title='Dashboard Tempo Real'
 )
+
+# Título da página
 st.title('Dashboard Tempo Real para Monitoramento das Condições Climáticas para a Região de Ribeirão Preto')
 
+# Instância do consumidor Kafka
 kafka_consumer = KafkaConsumidorClima(
     bootstrap_servers='localhost:9092',
     group_id='weather_grupo',
-    topico='topico_app_tempo_completo'
+    topico='topico_tempo_dashboard'
 )
 
-
-placeholder = st.empty()
-
-dados_municipios = []
-
-municipios_por_atualizacao = 5
+# Função para gerar layout
 
 
-for dados in kafka_consumer.consumidor_mensagens():
-    dados_municipios.append(dados)
+def gerar_layout(dados: Dict):
+    col1, col2, col3 = st.columns(3)
+    print(dados['velocidade_vento'])
 
-    if len(dados_municipios) >= municipios_por_atualizacao:
+    with col1:
+        st.write(f'Partição: {dados["particao"]}')
+        st.write(f'**Cidade: {dados["cidade"]}**')
+        st.write(f"Data hora API: {dados['data_hora_api']}")
+        st.write(f"Temperatura: {dados['temperatura']}°C")
+    with col2:
+        st.write(f'Data/hora Atual: {dados["data_hora_atual"]}')
+        st.write(f'Clima: {dados["clima"]}')
+        st.image(f'https://openweathermap.org/img/wn/{dados["icone"]}.png')
+        st.write(f'Umidade: {dados["umidade"]}%')
+    with col3:
+        st.write(
+            f"Velocidade do Vento: {dados['velocidade_vento']} m/s - Condição vento: {obter_escala_vento(dados['velocidade_vento'])}"
+        )
+        st.write(f"Ângulo do Vento: {dados['angulo_vento']}°")
+        st.write(f"Probabilidade de Chuva: {dados['probabilidade_chuva']}%")
+    st.write('-' * 20)
 
-        placeholder.empty()
 
-        with placeholder.container():
-            for chave, municipio in enumerate(dados_municipios):
-                st.write(f'Chave: {chave}')
-                st.write(f'Partição: {municipio["particao"]}')
-                st.write(f"Cidade: {municipio['cidade']}")
-                st.write(f"Temperatura: {municipio['temperatura']}°C")
-                st.write(f"Data/Hora_api: {municipio['data_hora_api']}")
-                st.write(f"Data/Hora: {municipio['data_hora_atual']}")
-                st.write('-' * 20)
+numero_particoes = 14
 
-        dados_municipios.clear()
 
-    time.sleep(1)
+container_tela = {
+    particao: st.empty() for particao in range(numero_particoes)
+}
+
+while True:
+    for particao in range(numero_particoes):
+        print('Primeiro loop', particao)
+        container_tela[particao].empty()
+    for dados in kafka_consumer.consumidor_mensagens():
+        particao = dados['particao']
+        if particao in container_tela:
+            with container_tela[particao].container():
+                gerar_layout(dados=dados)

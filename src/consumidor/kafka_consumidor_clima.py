@@ -36,10 +36,12 @@ class KafkaConsumidorClima:
                     'cidade': cidade,
                     'data_hora_api': data_hora,
                     'temperatura': temperatura,
+
                     'data_hora_atual': data_hora_atual,
                     'clima': clima,
                     'icone': icone,
                     'umidade': umidade,
+
                     'velocidade_vento': velocidade_vento,
                     'angulo_vento': angulo_vento,
                     'probabilidade_chuva': probabilidade_chuva
