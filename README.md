@@ -37,4 +37,15 @@ O projeto propõe uma arquitetura em tempo real para a região de Ribeirão Pret
 ## 6 – Demonstração
 [Link para a Demonstração](https://www.youtube.com/watch?v=SdjyYmXV8i8)
 
+## OBS: CRIAR arquivo .env com as variáveis de ambientes abaixo
+```
+URL_OPENWEATHER
+OPENWEATHER_KEY
+URL_KAFKA
+```
+
+## Link do apache KAFKA
+```
+https://archive.apache.org/dist/kafka/2.8.0/kafka_2.13-2.8.0.tgz
+```
 
