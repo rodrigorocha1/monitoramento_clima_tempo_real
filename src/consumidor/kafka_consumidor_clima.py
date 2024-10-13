@@ -1,10 +1,18 @@
 import json
 import datetime
+from typing import Any, Dict, Generator
 from kafka import KafkaConsumer
 
 
 class KafkaConsumidorClima:
     def __init__(self, bootstrap_servers: str, group_id: str, topico: str) -> None:
+        """Init do KafkaConsumidorClima
+
+        Args:
+            bootstrap_servers (str): url do servidor kafka
+            group_id (str): grupo id
+            topico (str): tótico a ser consumido
+        """
         self.__consumer = KafkaConsumer(
             topico,
             bootstrap_servers=bootstrap_servers,
@@ -14,7 +22,13 @@ class KafkaConsumidorClima:
             enable_auto_commit=True
         )
 
-    def consumidor_mensagens(self):
+    def consumidor_mensagens(self) -> Generator[Dict[str, Any], None, None]:
+        """Método para consumir mensagens
+
+        Yields:
+            Generator[Dict[str, Any], None, None]: Um gerador com o dicionário
+        """
+
         try:
             for mensagem in self.__consumer:
                 cidade = mensagem.value["name"]

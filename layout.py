@@ -15,6 +15,8 @@ class Dashboard:
         )
 
     def __gerar_configuracoes(self):
+        """Método com as configurações do dashboard
+        """
         st.set_page_config(
             layout='wide',
             page_title='Dashboard Tempo Real'
@@ -23,6 +25,11 @@ class Dashboard:
             'Dashboard Tempo Real para Monitoramento das Condições Climáticas para a Região de Ribeirão Preto')
 
     def __gerar_layout(self, dados: Dict):
+        """Método para gerar o layout
+
+        Args:
+            dados (Dict): requisição da API
+        """
         col1, col2, col3 = st.columns(3)
         print(dados['velocidade_vento'])
 
@@ -46,6 +53,8 @@ class Dashboard:
         st.write('-' * 20)
 
     def rodar_dashboard(self):
+        """Método para rodar o dashboarrd
+        """
         self.__gerar_configuracoes()
 
         numero_particoes = 14

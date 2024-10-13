@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 import requests
-import datetime
+from typing import Dict, Any
 
 
 class ServicoTempo:
@@ -10,7 +10,15 @@ class ServicoTempo:
         self.__url = os.environ['URL_OPENWEATHER']
         self.__chave = os.environ['OPENWEATHER_KEY']
 
-    def obter_tempo_atual(self, cidade: str):
+    def obter_tempo_atual(self, cidade: str) -> Dict[str, Any]:
+        """Método para obter os dados climáticos de umm múnicipio
+
+        Args:
+            cidade (str): cidade
+
+        Returns:
+            Dict[str, Any]: a requisição dos dados climáticos
+        """
         params = {
             'appid': self.__chave,
             'units': 'metric',

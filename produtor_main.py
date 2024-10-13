@@ -30,6 +30,8 @@ class ProdutorMain():
         self.__servico_tempo = ServicoTempo()
 
     def rodar_produtor(self):
+        """Método para rodar o produtosr
+        """
 
         self.__kafka_produtor.criar_topico(
             topico=self.__topico, numero_particoes=len(self.__cidades))
